@@ -1,0 +1,93 @@
+---
+import { getCollection } from "astro:content";
+
+const updateEntries = await getCollection("updates");
+// Sort by date descending
+const sortedUpdates = updateEntries.sort(
+    (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+---
+
+<!-- ═══════════ 10. UPDATE PROGRESS ═══════════ -->
+<section class="update-progress py-24 bg-gray-50" id="update">
+    <div class="container mx-auto px-6">
+        <div
+            class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12"
+        >
+            <div class="max-w-2xl">
+                <span
+                    class="section-badge reveal inline-flex items-center gap-2 px-4 py-1.5 bg-accent/20 text-accent-dark rounded-full text-sm font-semibold uppercase tracking-wider mb-4"
+                    >📢 Update Terbaru</span
+                >
+                <h2
+                    class="section-title reveal text-3xl md:text-4xl font-bold font-heading text-dark"
+                >
+                    Perkembangan Pembangunan
+                </h2>
+            </div>
+            <a
+                href="#"
+                class="reveal text-primary font-semibold hover:text-primary-dark transition-colors flex items-center gap-2"
+            >
+                Lihat Semua Update →
+            </a>
+        </div>
+
+        <div
+            class="update-cards grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+            {
+                sortedUpdates.map((update, index) => (
+                    <article
+                        class={`update-card reveal bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 flex flex-col`}
+                        style={`transition-delay: ${index * 100}ms`}
+                    >
+                        <div class="update-img relative h-56 overflow-hidden bg-gray-200">
+                            {update.data.image ? (
+                                <img
+                                    src={update.data.image}
+                                    alt={update.data.title}
+                                    loading="lazy"
+                                    class="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
+                                />
+                            ) : (
+                                <div class="w-full h-full flex items-center justify-center text-gray-400">
+                                    No Image
+                                </div>
+                            )}
+                            <div class="absolute top-4 left-4 flex gap-2">
+                                <span class="px-3 py-1 bg-white/90 backdrop-blur text-primary text-xs font-bold rounded-lg shadow-sm">
+                                    {update.data.date.toLocaleDateString(
+                                        "id-ID",
+                                        {
+                                            year: "numeric",
+                                            month: "short",
+                                            day: "numeric",
+                                        },
+                                    )}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="update-content p-6 flex-grow flex flex-col">
+                            <h3 class="font-bold text-xl font-heading text-dark mb-3 line-clamp-2 hover:text-primary transition-colors">
+                                <a href={`/update/${update.slug}`}>
+                                    {update.data.title}
+                                </a>
+                            </h3>
+                            <p class="text-gray-500 text-sm leading-relaxed mb-6 line-clamp-3 flex-grow">
+                                {update.data.description}
+                            </p>
+                            <a
+                                href={`/update/${update.slug}`}
+                                class="mt-auto inline-flex items-center text-primary font-medium text-sm gap-1 hover:gap-2 transition-all"
+                            >
+                                Baca Selengkapnya <span>→</span>
+                            </a>
+                        </div>
+                    </article>
+                ))
+            }
+        </div>
+    </div>
+</section>

@@ -1,0 +1,202 @@
+---
+
+---
+
+<!-- ═══════════ 5. SIMULASI PAHALA ═══════════ -->
+<section
+    class="simulasi py-24 bg-gradient-to-br from-primary-dark to-dark text-white"
+    id="program"
+>
+    <div class="container mx-auto px-6 text-center">
+        <span
+            class="section-badge reveal inline-flex items-center gap-2 px-4 py-1.5 bg-white/15 text-accent-light rounded-full text-sm font-semibold uppercase tracking-wider mb-4"
+        >
+            🎯 Simulasi Pahala
+        </span>
+        <h2
+            class="section-title reveal text-3xl md:text-4xl font-bold font-heading mb-4 text-white"
+        >
+            Hitung Kontribusi Wakaf Anda
+        </h2>
+        <p
+            class="section-subtitle reveal text-white/80 max-w-2xl mx-auto leading-relaxed text-lg"
+        >
+            Masukkan nominal wakaf untuk melihat seberapa besar lahan yang bisa
+            Anda wakafkan
+        </p>
+
+        <div
+            class="simulasi-card reveal mt-12 p-8 md:p-12 max-w-2xl mx-auto bg-white/10 backdrop-blur-xl border border-white/15 rounded-3xl"
+        >
+            <div class="simulasi-input-group mb-8 text-left">
+                <label
+                    for="nominalWakaf"
+                    class="block font-semibold mb-2 text-sm text-white/90"
+                    >Nominal Wakaf</label
+                >
+                <div
+                    class="simulasi-input-wrapper flex items-center bg-white/20 border border-white/25 rounded-xl overflow-hidden focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/30 transition-all"
+                >
+                    <span
+                        class="prefix px-4 py-3 bg-black/20 text-white font-semibold border-r border-white/10"
+                        >Rp</span
+                    >
+                    <input
+                        type="text"
+                        id="nominalWakaf"
+                        placeholder="1.000.000"
+                        inputmode="numeric"
+                        class="w-full bg-transparent border-none text-white font-heading font-semibold text-xl px-4 py-3 placeholder:text-white/40 focus:outline-none"
+                    />
+                </div>
+            </div>
+
+            <div
+                class="simulasi-presets grid grid-cols-2 md:grid-cols-3 gap-3 mb-8"
+            >
+                <button
+                    class="preset-btn py-2.5 px-4 bg-white/10 hover:bg-white/20 border border-white/15 rounded-lg text-sm font-medium transition-all"
+                    data-amount="100000">100rb</button
+                >
+                <button
+                    class="preset-btn py-2.5 px-4 bg-white/10 hover:bg-white/20 border border-white/15 rounded-lg text-sm font-medium transition-all"
+                    data-amount="500000">500rb</button
+                >
+                <button
+                    class="preset-btn py-2.5 px-4 bg-white/10 hover:bg-white/20 border border-white/15 rounded-lg text-sm font-medium transition-all"
+                    data-amount="1000000">1 Juta</button
+                >
+                <button
+                    class="preset-btn py-2.5 px-4 bg-white/10 hover:bg-white/20 border border-white/15 rounded-lg text-sm font-medium transition-all"
+                    data-amount="5000000">5 Juta</button
+                >
+                <button
+                    class="preset-btn py-2.5 px-4 bg-white/10 hover:bg-white/20 border border-white/15 rounded-lg text-sm font-medium transition-all"
+                    data-amount="10000000">10 Juta</button
+                >
+                <button
+                    class="preset-btn py-2.5 px-4 bg-white/10 hover:bg-white/20 border border-white/15 rounded-lg text-sm font-medium transition-all"
+                    data-amount="50000000">50 Juta</button
+                >
+            </div>
+
+            <div
+                class="simulasi-result p-6 bg-gradient-to-br from-black/40 to-black/20 border border-white/10 rounded-2xl mb-8"
+                id="simulasiResult"
+            >
+                <div
+                    class="result-area font-heading text-4xl font-bold text-accent-light mb-2"
+                    id="resultArea"
+                >
+                    0 m²
+                </div>
+                <div
+                    class="result-percent text-white/70 text-sm font-medium mb-3"
+                    id="resultPercent"
+                >
+                    0% dari total lahan
+                </div>
+                <div
+                    class="result-message text-sm text-green-300 font-medium"
+                    id="resultMessage"
+                >
+                </div>
+            </div>
+
+            <a
+                href="#wakaf"
+                class="btn w-full inline-flex items-center justify-center gap-2 py-4 bg-gradient-to-br from-accent to-accent-dark text-white rounded-xl font-heading font-semibold shadow-[0_4px_14px_rgba(212,168,67,0.35)] hover:-translate-y-0.5 transition-transform text-lg"
+            >
+                Wakafkan Sekarang →
+            </a>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener("astro:page-load", () => setupSimulasi());
+    setupSimulasi();
+
+    function setupSimulasi() {
+        const nominalInput = document.getElementById(
+            "nominalWakaf",
+        ) as HTMLInputElement;
+        const resultArea = document.getElementById("resultArea");
+        const resultPercent = document.getElementById("resultPercent");
+        const resultMessage = document.getElementById("resultMessage");
+        const presetBtns = document.querySelectorAll(".preset-btn");
+
+        if (!nominalInput || !resultArea || !resultPercent || !resultMessage)
+            return;
+
+        // Price per m² = 13B / 1300 = 10,000,000 per m²
+        const pricePerSqm = 10000000;
+        const totalArea = 1300;
+
+        const formatNumber = (num: number) => {
+            return new Intl.NumberFormat("id-ID").format(num);
+        };
+
+        const calculateSimulasi = (nominal: number) => {
+            if (!nominal || isNaN(nominal)) {
+                resultArea.innerText = "0 m²";
+                resultPercent.innerText = "0% dari total lahan";
+                resultMessage.innerText = "";
+                return;
+            }
+
+            const area = nominal / pricePerSqm;
+            const percentage = (area / totalArea) * 100;
+
+            // Formatting
+            let formattedArea;
+            if (area < 1) {
+                formattedArea =
+                    (area * 10000).toFixed(1).replace(/\.0$/, "") + " cm²";
+            } else {
+                formattedArea = area.toFixed(2).replace(/\.00$/, "") + " m²";
+            }
+
+            resultArea.innerText = formattedArea;
+            resultPercent.innerText =
+                percentage.toFixed(4).replace(/\.?0+$/, "") +
+                "% dari total lahan";
+
+            if (area >= 1) {
+                resultMessage.innerText =
+                    "MasyaAllah, Anda mewakafkan lahan yang cukup untuk ruang belajar!";
+            } else if (area > 0) {
+                resultMessage.innerText =
+                    "Barakallah, setiap jengkal lahan akan menjadi saksi kebaikan Anda.";
+            } else {
+                resultMessage.innerText = "";
+            }
+        };
+
+        nominalInput.addEventListener("input", (e) => {
+            let value = (e.target as HTMLInputElement).value.replace(
+                /[^\d]/g,
+                "",
+            );
+            if (value) {
+                (e.target as HTMLInputElement).value = formatNumber(
+                    parseInt(value),
+                );
+                calculateSimulasi(parseInt(value));
+            } else {
+                (e.target as HTMLInputElement).value = "";
+                calculateSimulasi(0);
+            }
+        });
+
+        presetBtns.forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+                const amount = parseInt(
+                    (e.target as HTMLButtonElement).dataset.amount || "0",
+                );
+                nominalInput.value = formatNumber(amount);
+                calculateSimulasi(amount);
+            });
+        });
+    }
+</script>

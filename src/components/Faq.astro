@@ -1,0 +1,88 @@
+---
+import { getCollection } from "astro:content";
+
+const faqEntries = await getCollection("faq");
+const sortedFaqs = faqEntries.sort((a, b) => a.data.order - b.data.order);
+---
+
+<!-- ═══════════ 9. FAQ ═══════════ -->
+<section class="faq py-24 bg-white" id="faq">
+    <div class="container mx-auto px-6 max-w-4xl">
+        <div class="text-center mb-12">
+            <span
+                class="section-badge reveal inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-semibold uppercase tracking-wider mb-4"
+                >❓ FAQ</span
+            >
+            <h2
+                class="section-title reveal text-3xl md:text-4xl font-bold font-heading text-dark"
+            >
+                Pertanyaan yang Sering Diajukan
+            </h2>
+        </div>
+
+        <div class="faq-list space-y-4">
+            {
+                sortedFaqs.map((faq, index) => (
+                    <div
+                        class={`faq-item reveal bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm transition-all hover:border-primary/20 ${index === 0 ? "active" : ""}`}
+                    >
+                        <button class="faq-question w-full flex items-center justify-between p-6 text-left focus:outline-none">
+                            <span class="font-semibold text-dark text-lg pr-8">
+                                {faq.data.question}
+                            </span>
+                            <span class="faq-toggle w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-primary text-xl font-light shrink-0 transition-transform duration-300">
+                                {index === 0 ? "×" : "+"}
+                            </span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner px-6 pb-6 text-gray-500 leading-relaxed md:pr-12">
+                                {faq.data.answer}
+                            </div>
+                        </div>
+                    </div>
+                ))
+            }
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener("astro:page-load", () => setupFaq());
+    setupFaq();
+
+    function setupFaq() {
+        const faqItems = document.querySelectorAll(".faq-item");
+
+        faqItems.forEach((item) => {
+            const questionBtn = item.querySelector(".faq-question");
+
+            if (questionBtn) {
+                questionBtn.addEventListener("click", () => {
+                    const isActive = item.classList.contains("active");
+                    const toggle = item.querySelector(".faq-toggle");
+
+                    // Close all others
+                    faqItems.forEach((sibling) => {
+                        sibling.classList.remove("active");
+                        const sibToggle = sibling.querySelector(".faq-toggle");
+                        if (sibToggle) sibToggle.innerHTML = "+";
+                    });
+
+                    // Toggle current
+                    if (!isActive) {
+                        item.classList.add("active");
+                        if (toggle) toggle.innerHTML = "×";
+                    }
+                });
+            }
+        });
+
+        // Handle initial state for correct toggle icon
+        faqItems.forEach((item) => {
+            if (item.classList.contains("active")) {
+                const toggle = item.querySelector(".faq-toggle");
+                if (toggle) toggle.innerHTML = "×";
+            }
+        });
+    }
+</script>

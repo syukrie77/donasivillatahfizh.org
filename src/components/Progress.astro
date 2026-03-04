@@ -1,0 +1,202 @@
+---
+import siteData from "../data/site.json";
+
+const { target, collected, percentage, totalWakif, estimasiWaktu } = siteData;
+
+const formatRupiah = (number: number) => {
+    return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0,
+    }).format(number);
+};
+
+const sisaDana = target - collected;
+---
+
+<!-- ═══════════ 4. TARGET & PROGRESS ═══════════ -->
+<section class="progress-section py-24 bg-white" id="progress">
+    <div class="container mx-auto px-6">
+        <div class="text-center">
+            <span
+                class="section-badge reveal inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-semibold uppercase tracking-wider mb-4"
+                >📊 Target & Progress</span
+            >
+            <h2
+                class="section-title reveal text-3xl md:text-4xl font-bold font-heading mb-4 text-dark"
+            >
+                Progress Pengumpulan Dana Wakaf
+            </h2>
+        </div>
+
+        <div
+            class="progress-card reveal mt-8 p-8 md:p-12 rounded-3xl bg-gradient-to-br from-[#f0fdf4] to-[#ffffff] border border-primary/20 shadow-xl max-w-4xl mx-auto"
+        >
+            <div class="progress-header text-center mb-12">
+                <div
+                    class="progress-amount font-heading text-4xl md:text-5xl font-extrabold text-primary"
+                    data-target="{collected}"
+                    id="progressAmount"
+                >
+                    {formatRupiah(0)}
+                </div>
+                <div class="progress-target text-gray-500 mt-2">
+                    dari target <strong class="text-gray-700"
+                        >{formatRupiah(target)}</strong>
+                </div>
+            </div>
+
+            <div class="progress-bar-wrapper mb-12">
+                <div
+                    class="progress-bar-outer w-full h-5 bg-gray-200 rounded-full overflow-hidden relative"
+                >
+                    <div
+                        class="progress-bar-inner h-full bg-gradient-to-r from-primary via-primary-light to-accent rounded-full w-0 transition-all duration-[2000ms] ease-out relative"
+                        id="progressBar"
+                        data-percent="{percentage}"
+                    >
+                    </div>
+                </div>
+                <div
+                    class="progress-percentage text-right font-bold text-primary mt-2"
+                    id="progressPercent"
+                >
+                    0%
+                </div>
+            </div>
+
+            <div
+                class="progress-stats grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12"
+            >
+                <div
+                    class="progress-stat-item text-center p-6 bg-white rounded-xl shadow-sm border border-gray-100"
+                >
+                    <div class="stat-icon text-3xl mb-2">💰</div>
+                    <div
+                        class="stat-value font-heading text-2xl font-bold text-primary"
+                    >
+                        {formatRupiah(sisaDana)}
+                    </div>
+                    <div class="stat-label text-sm text-gray-500 mt-1">
+                        Sisa Dana Dibutuhkan
+                    </div>
+                </div>
+                <div
+                    class="progress-stat-item text-center p-6 bg-white rounded-xl shadow-sm border border-gray-100"
+                >
+                    <div class="stat-icon text-3xl mb-2">👥</div>
+                    <div
+                        class="stat-value font-heading text-2xl font-bold text-primary"
+                    >
+                        {new Intl.NumberFormat("id-ID").format(totalWakif)}
+                    </div>
+                    <div class="stat-label text-sm text-gray-500 mt-1">
+                        Jumlah Wakif
+                    </div>
+                </div>
+                <div
+                    class="progress-stat-item text-center p-6 bg-white rounded-xl shadow-sm border border-gray-100"
+                >
+                    <div class="stat-icon text-3xl mb-2">⏱️</div>
+                    <div
+                        class="stat-value font-heading text-2xl font-bold text-primary"
+                    >
+                        {estimasiWaktu}
+                    </div>
+                    <div class="stat-label text-sm text-gray-500 mt-1">
+                        Estimasi Waktu Tersisa
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-cta text-center">
+                <a
+                    href="#wakaf"
+                    class="btn btn-pulse inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-br from-primary to-primary-dark text-white rounded-xl font-heading font-semibold shadow-[0_4px_14px_rgba(13,124,61,0.35)] hover:-translate-y-0.5 transition-transform"
+                >
+                    🤲 Ambil Bagian Wakaf
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script define:vars={{ collected, percentage }}>
+    // Number formatter
+    const formatNumber = (num) => {
+        return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 0,
+        }).format(num);
+    };
+
+    // Setup Animation
+    document.addEventListener("astro:page-load", () => setupProgress());
+    setupProgress();
+
+    function setupProgress() {
+        const progressBar = document.getElementById("progressBar");
+        const progressAmount = document.getElementById("progressAmount");
+        const progressPercent = document.getElementById("progressPercent");
+
+        if (!progressBar || !progressAmount || !progressPercent) return;
+
+        let animated = false;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting && !animated) {
+                        animated = true;
+
+                        // Animate bar width
+                        setTimeout(() => {
+                            progressBar.style.width = `${percentage}%`;
+                        }, 300);
+
+                        // Animate numbers
+                        const startNum = 0;
+                        const duration = 2000;
+                        const startTime = performance.now();
+
+                        const animate = (currentTime) => {
+                            const elapsed = currentTime - startTime;
+                            const progress = Math.min(elapsed / duration, 1);
+
+                            // Easing text (easeOutQuart)
+                            const easeProgress = 1 - Math.pow(1 - progress, 4);
+
+                            const currentAmount = Math.floor(
+                                easeProgress * collected,
+                            );
+                            const currentPercent = (
+                                easeProgress * percentage
+                            ).toFixed(1);
+
+                            progressAmount.innerText =
+                                formatNumber(currentAmount);
+                            progressPercent.innerText = currentPercent + "%";
+
+                            if (progress < 1) {
+                                requestAnimationFrame(animate);
+                            } else {
+                                progressAmount.innerText =
+                                    formatNumber(collected);
+                                progressPercent.innerText = percentage + "%";
+                            }
+                        };
+
+                        requestAnimationFrame(animate);
+                    }
+                });
+            },
+            { threshold: 0.2 },
+        );
+
+        const progressSection = document.querySelector(".progress-section");
+        if (progressSection) {
+            observer.observe(progressSection);
+        }
+    }
+</script>

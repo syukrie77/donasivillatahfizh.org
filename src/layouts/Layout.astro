@@ -1,0 +1,101 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/jpeg" href="/assets/logo_villa_tahfizh.jpeg" />
+    <title>{title} — Wakaf Lahan untuk Penjaga Al-Qur'an</title>
+    <meta
+      name="description"
+      content="Wakaf lahan seluas 1300m² untuk membangun pusat tahfiz — Villa Tahfizh. Setiap donasi Anda menjadi investasi pahala jariyah yang mengalir tanpa henti."
+    />
+
+    <!-- Next 2 tags are required by DecapCMS -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"
+    ></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Organization Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Yayasan Khoiru Ummah Indonesia Madani",
+        "alternateName": "Donasi Villa Tahfizh",
+        "url": "https://donasivillatahfizh.com",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+62878-4797-2272",
+          "contactType": "customer service"
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Jl. Soebagyo Raya blok Y, Komplek Peruri",
+          "addressLocality": "Ciledug",
+          "addressRegion": "Tangerang",
+          "addressCountry": "ID"
+        }
+      }
+    </script>
+    <slot name="head" />
+  </head>
+  <body class="font-body text-gray-800 leading-relaxed bg-white">
+    <slot />
+
+    <script>
+      // Netlify Identity Redirect for DecapCMS
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", (user) => {
+          if (!user) {
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/";
+            });
+          }
+        });
+      }
+
+      // Scroll Reveal Animations
+      document.addEventListener("astro:page-load", () => setupReveal());
+      setupReveal();
+
+      function setupReveal() {
+        const observerOptions = {
+          root: null,
+          rootMargin: "0px",
+          threshold: 0.15,
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("revealed");
+              observer.unobserve(entry.target);
+            }
+          });
+        }, observerOptions);
+
+        const elements = document.querySelectorAll(
+          ".reveal, .reveal-left, .reveal-right",
+        );
+        elements.forEach((el) => observer.observe(el));
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,41 @@
+backend:
+  name: test-repo # For local development
+  # name: git-gateway
+  # branch: main
+  
+media_folder: "public/assets/uploads"
+public_folder: "/assets/uploads"
+
+collections:
+  - name: "updates"
+    label: "Update Progress"
+    folder: "src/content/updates"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Publish Date", name: "date", widget: "datetime"}
+      - {label: "Image", name: "image", widget: "image", required: false}
+      - {label: "Description", name: "description", widget: "text"}
+      - {label: "Body", name: "body", widget: "markdown", required: false}
+
+  - name: "testimoni"
+    label: "Testimoni Wakif"
+    folder: "src/content/testimoni"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Name", name: "name", widget: "string"}
+      - {label: "Role", name: "role", widget: "string"}
+      - {label: "Quote", name: "quote", widget: "text"}
+      - {label: "Rating", name: "rating", widget: "number", default: 5, value_type: "int"}
+
+  - name: "faq"
+    label: "FAQ"
+    folder: "src/content/faq"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Question", name: "question", widget: "string"}
+      - {label: "Answer", name: "answer", widget: "text"}
+      - {label: "Order", name: "order", widget: "number", value_type: "int", default: 0}

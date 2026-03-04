@@ -1,0 +1,19 @@
+{
+    "name": "donasi-villa-tahfiz",
+    "type": "module",
+    "version": "1.0.0",
+    "scripts": {
+        "dev": "astro dev",
+        "build": "astro build",
+        "preview": "astro preview",
+        "astro": "astro"
+    },
+    "dependencies": {
+        "astro": "^5.18.0",
+        "decap-cms-app": "^3.10.1",
+        "tailwindcss": "^4.2.1"
+    },
+    "devDependencies": {
+        "@tailwindcss/vite": "^4.2.1"
+    }
+}

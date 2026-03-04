@@ -1,0 +1,191 @@
+---
+import siteData from "../data/site.json";
+const { countdownDays } = siteData;
+---
+
+<!-- ═══════════ 11. FINAL CTA & COUNTDOWN ═══════════ -->
+<section
+    class="final-cta py-32 bg-gradient-to-br from-primary-dark via-primary to-accent-dark relative overflow-hidden"
+    id="finalcta"
+>
+    <!-- Decorative Elements -->
+    <div
+        class="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"
+    >
+    </div>
+    <div
+        class="absolute bottom-0 left-0 w-96 h-96 bg-accent/20 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2"
+    >
+    </div>
+
+    <div class="container mx-auto px-6 text-center relative z-10">
+        <h2
+            class="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-white mb-6 leading-tight max-w-4xl mx-auto drop-shadow-lg"
+        >
+            Waktu Terus Berjalan, Jangan Lewatkan Kesempatan Amal Jariyah Ini
+        </h2>
+        <p
+            class="text-xl text-white/90 mb-12 max-w-2xl mx-auto leading-relaxed"
+        >
+            Sumbangkan sebagian harta Anda hari ini untuk membangun istana di
+            surga nanti.
+        </p>
+
+        <!-- Countdown Timer -->
+        <div
+            class="countdown-container flex flex-wrap justify-center gap-4 md:gap-8 mb-16"
+            id="countdown"
+            data-days="{countdownDays}"
+        >
+            <div class="countdown-item flex flex-col items-center">
+                <div
+                    class="countdown-value w-20 h-24 md:w-28 md:h-32 bg-black/30 backdrop-blur-md rounded-2xl flex items-center justify-center text-4xl md:text-6xl font-black font-heading text-white border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.3)] mb-3"
+                    id="cd-days"
+                >
+                    00
+                </div>
+                <div
+                    class="countdown-label text-white/80 font-medium uppercase tracking-widest text-sm text-center"
+                >
+                    Hari
+                </div>
+            </div>
+            <div
+                class="text-4xl md:text-6xl font-bold text-white/50 -mt-2 self-start flex items-center h-24 md:h-32"
+            >
+                :
+            </div>
+            <div class="countdown-item flex flex-col items-center">
+                <div
+                    class="countdown-value w-20 h-24 md:w-28 md:h-32 bg-black/30 backdrop-blur-md rounded-2xl flex items-center justify-center text-4xl md:text-6xl font-black font-heading text-white border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.3)] mb-3"
+                    id="cd-hours"
+                >
+                    00
+                </div>
+                <div
+                    class="countdown-label text-white/80 font-medium uppercase tracking-widest text-sm text-center"
+                >
+                    Jam
+                </div>
+            </div>
+            <div
+                class="text-4xl md:text-6xl font-bold text-white/50 -mt-2 self-start flex items-center h-24 md:h-32 hidden md:flex"
+            >
+                :
+            </div>
+            <div class="countdown-item flex flex-col items-center">
+                <div
+                    class="countdown-value w-20 h-24 md:w-28 md:h-32 bg-black/30 backdrop-blur-md rounded-2xl flex items-center justify-center text-4xl md:text-6xl font-black font-heading text-white border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.3)] mb-3"
+                    id="cd-minutes"
+                >
+                    00
+                </div>
+                <div
+                    class="countdown-label text-white/80 font-medium uppercase tracking-widest text-sm text-center"
+                >
+                    Menit
+                </div>
+            </div>
+            <div
+                class="text-4xl md:text-6xl font-bold text-white/50 -mt-2 self-start flex items-center h-24 md:h-32"
+            >
+                :
+            </div>
+            <div class="countdown-item flex flex-col items-center">
+                <div
+                    class="countdown-value w-20 h-24 md:w-28 md:h-32 bg-black/30 backdrop-blur-md rounded-2xl flex items-center justify-center text-4xl md:text-6xl font-black font-heading text-accent border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.3)] mb-3 relative overflow-hidden group"
+                    id="cd-seconds"
+                >
+                    00
+                </div>
+                <div
+                    class="countdown-label text-white/80 font-medium uppercase tracking-widest text-sm text-center"
+                >
+                    Detik
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-center gap-6">
+            <a
+                href="#wakaf"
+                class="btn btn-pulse inline-flex items-center justify-center gap-3 px-10 py-5 bg-gradient-to-br from-accent to-[#E8C96A] text-dark rounded-xl font-heading font-black text-xl shadow-[0_10px_30px_rgba(212,168,67,0.5)] hover:-translate-y-1 hover:shadow-[0_15px_40px_rgba(212,168,67,0.6)] transition-all"
+            >
+                ✊ Wakaf Sekarang Juga
+            </a>
+            <a
+                href="https://wa.me/6287847972272"
+                class="btn inline-flex items-center justify-center gap-3 px-10 py-5 bg-white/10 backdrop-blur-sm border border-white/30 text-white rounded-xl font-heading font-bold text-xl hover:bg-white/20 hover:-translate-y-1 transition-all"
+            >
+                💬 Tanya Admin
+            </a>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener("astro:page-load", () => setupCountdown());
+    setupCountdown();
+
+    function setupCountdown() {
+        const countdownEl = document.getElementById("countdown");
+        if (!countdownEl) return;
+
+        const daysVal = parseInt(countdownEl.dataset.days || "0");
+
+        // Set target date = current time + configured days
+        const targetDate = new Date();
+        targetDate.setDate(targetDate.getDate() + daysVal);
+        const targetTime = targetDate.getTime();
+
+        const elDays = document.getElementById("cd-days");
+        const elHours = document.getElementById("cd-hours");
+        const elMinutes = document.getElementById("cd-minutes");
+        const elSeconds = document.getElementById("cd-seconds");
+
+        if (!elDays || !elHours || !elMinutes || !elSeconds) return;
+
+        const updateTimer = () => {
+            const now = new Date().getTime();
+            const distance = targetTime - now;
+
+            if (distance < 0) {
+                clearInterval(timerInterval);
+                elDays.innerText = "00";
+                elHours.innerText = "00";
+                elMinutes.innerText = "00";
+                elSeconds.innerText = "00";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor(
+                (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+            );
+            const minutes = Math.floor(
+                (distance % (1000 * 60 * 60)) / (1000 * 60),
+            );
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            elDays.innerText = String(days).padStart(2, "0");
+            elHours.innerText = String(hours).padStart(2, "0");
+            elMinutes.innerText = String(minutes).padStart(2, "0");
+
+            // Update seconds with slight animation
+            if (elSeconds.innerText !== String(seconds).padStart(2, "0")) {
+                elSeconds.classList.add("scale-110", "text-white");
+                elSeconds.classList.remove("text-accent");
+
+                setTimeout(() => {
+                    elSeconds.classList.remove("scale-110", "text-white");
+                    elSeconds.classList.add("text-accent");
+                }, 150);
+
+                elSeconds.innerText = String(seconds).padStart(2, "0");
+            }
+        };
+
+        updateTimer();
+        const timerInterval = setInterval(updateTimer, 1000);
+    }
+</script>

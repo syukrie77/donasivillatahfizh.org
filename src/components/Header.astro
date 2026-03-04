@@ -1,0 +1,163 @@
+---
+
+---
+
+<!-- ═══════════ 1. HEADER ═══════════ -->
+<header
+    class="header fixed top-0 w-full z-50 py-4"
+    id="header"
+    transition:persist
+>
+    <div class="container mx-auto px-6 flex items-center justify-between">
+        <a href="#" class="header-logo flex items-center gap-3">
+            <img
+                src="/assets/logo_villa_tahfizh.jpeg"
+                alt="Logo Donasi Villa Tahfizh"
+                class="w-11 h-11 rounded-full"
+            />
+            <span class="font-heading font-bold text-lg text-white"
+                >Donasi Villa Tahfizh</span
+            >
+        </a>
+
+        <nav
+            class="header-nav hidden md:flex items-center gap-1"
+            id="desktopNav"
+        >
+            <a
+                href="#tentang"
+                class="px-3.5 py-2 text-sm font-medium text-white/85 rounded-md hover:text-white hover:bg-white/15 transition-all"
+                >Tentang</a
+            >
+            <a
+                href="#program"
+                class="px-3.5 py-2 text-sm font-medium text-white/85 rounded-md hover:text-white hover:bg-white/15 transition-all"
+                >Program</a
+            >
+            <a
+                href="#progress"
+                class="px-3.5 py-2 text-sm font-medium text-white/85 rounded-md hover:text-white hover:bg-white/15 transition-all"
+                >Progress</a
+            >
+            <a
+                href="#legalitas"
+                class="px-3.5 py-2 text-sm font-medium text-white/85 rounded-md hover:text-white hover:bg-white/15 transition-all"
+                >Legalitas</a
+            >
+            <a
+                href="#faq"
+                class="px-3.5 py-2 text-sm font-medium text-white/85 rounded-md hover:text-white hover:bg-white/15 transition-all"
+                >FAQ</a
+            >
+            <a
+                href="#wakaf"
+                class="header-cta bg-gradient-to-br from-accent to-accent-dark text-white ml-2 px-5 py-2.5 rounded-lg font-semibold shadow-[0_3px_10px_rgba(212,168,67,0.3)] hover:transform hover:-translate-y-px transition-transform"
+                >Wakaf Sekarang</a
+            >
+        </nav>
+
+        <button
+            class="hamburger md:hidden flex flex-col gap-[5px] p-1 z-[1001]"
+            id="hamburger"
+            aria-label="Menu"
+        >
+            <span class="block w-6 h-[2.5px] bg-white rounded-sm transition-all"
+            ></span>
+            <span class="block w-6 h-[2.5px] bg-white rounded-sm transition-all"
+            ></span>
+            <span class="block w-6 h-[2.5px] bg-white rounded-sm transition-all"
+            ></span>
+        </button>
+    </div>
+</header>
+
+<!-- Mobile Nav -->
+<div
+    class="mobile-nav-overlay fixed inset-0 bg-black/50 opacity-0 invisible z-[999] transition-all"
+    id="mobileOverlay"
+>
+</div>
+<nav
+    class="mobile-nav fixed top-0 -right-[300px] w-[280px] h-screen bg-white z-[1000] pt-20 px-6 pb-8 transition-all duration-300 shadow-xl overflow-y-auto"
+    id="mobileNav"
+>
+    <a
+        href="#tentang"
+        class="block p-3.5 mb-1 text-gray-800 font-medium rounded-md hover:bg-primary/5 hover:text-primary transition-all"
+        >Tentang</a
+    >
+    <a
+        href="#program"
+        class="block p-3.5 mb-1 text-gray-800 font-medium rounded-md hover:bg-primary/5 hover:text-primary transition-all"
+        >Program</a
+    >
+    <a
+        href="#progress"
+        class="block p-3.5 mb-1 text-gray-800 font-medium rounded-md hover:bg-primary/5 hover:text-primary transition-all"
+        >Progress</a
+    >
+    <a
+        href="#legalitas"
+        class="block p-3.5 mb-1 text-gray-800 font-medium rounded-md hover:bg-primary/5 hover:text-primary transition-all"
+        >Legalitas</a
+    >
+    <a
+        href="#faq"
+        class="block p-3.5 mb-1 text-gray-800 font-medium rounded-md hover:bg-primary/5 hover:text-primary transition-all"
+        >FAQ</a
+    >
+    <a
+        href="#wakaf"
+        class="mobile-cta block text-center mt-4 p-3.5 bg-gradient-to-br from-primary to-primary-dark text-white rounded-lg font-semibold"
+        >Wakaf Sekarang</a
+    >
+</nav>
+
+<script>
+    // Setup interactivity via Astro island pattern
+    document.addEventListener("astro:page-load", () => setupHeader());
+    // Also run on initial load
+    setupHeader();
+
+    function setupHeader() {
+        const header = document.getElementById("header");
+        const hamburger = document.getElementById("hamburger");
+        const mobileNav = document.getElementById("mobileNav");
+        const mobileOverlay = document.getElementById("mobileOverlay");
+
+        if (!header || !hamburger || !mobileNav || !mobileOverlay) return;
+
+        // Scroll Effect
+        const handleScroll = () => {
+            if (window.scrollY > 50) {
+                header.classList.add("scrolled");
+            } else {
+                header.classList.remove("scrolled");
+            }
+        };
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        handleScroll();
+
+        // Mobile Nav Toggle
+        const toggleMobileNav = () => {
+            hamburger.classList.toggle("active");
+            mobileNav.classList.toggle("active");
+            mobileOverlay.classList.toggle("active");
+            document.body.style.overflow = mobileNav.classList.contains(
+                "active",
+            )
+                ? "hidden"
+                : "";
+        };
+
+        hamburger.addEventListener("click", toggleMobileNav);
+        mobileOverlay.addEventListener("click", toggleMobileNav);
+
+        // Close on link click
+        mobileNav.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => {
+                if (mobileNav.classList.contains("active")) toggleMobileNav();
+            });
+        });
+    }
+</script>

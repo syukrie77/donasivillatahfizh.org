@@ -1,0 +1,189 @@
+---
+import { getCollection } from "astro:content";
+
+const testimoniEntries = await getCollection("testimoni");
+---
+
+<!-- ═══════════ 8. TESTIMONI ═══════════ -->
+<section
+    class="testimoni py-24 bg-gradient-to-br from-gray-50 to-white overflow-hidden relative"
+    id="testimoni"
+>
+    <div class="container mx-auto px-6 relative z-10">
+        <div class="text-center mb-12">
+            <span
+                class="section-badge reveal inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-semibold uppercase tracking-wider mb-4"
+                >💬 Testimoni</span
+            >
+            <h2
+                class="section-title reveal text-3xl md:text-4xl font-bold font-heading text-dark"
+            >
+                Apa Kata Para Wakif?
+            </h2>
+        </div>
+
+        <div class="testimoni-slider reveal relative max-w-5xl mx-auto">
+            <div
+                class="testimoni-track flex gap-6 overflow-x-hidden snap-x snap-mandatory"
+                id="testimoniTrack"
+            >
+                {
+                    testimoniEntries.map((entry) => (
+                        <div class="testimoni-card min-w-[100%] md:min-w-[calc(50%-12px)] lg:min-w-[calc(33.333%-16px)] snap-center transition-transform duration-500 shrink-0">
+                            <div class="testimoni-card-inner p-8 bg-white border border-gray-100 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] h-full flex flex-col">
+                                <div class="testimoni-stars text-accent mb-4 tracking-[0.2em] text-lg">
+                                    {"★".repeat(entry.data.rating)}
+                                    {"☆".repeat(5 - entry.data.rating)}
+                                </div>
+                                <p class="text-gray-600 mb-8 italic leading-relaxed flex-grow">
+                                    "{entry.data.quote}"
+                                </p>
+                                <div class="testimoni-author flex items-center gap-4 mt-auto">
+                                    <div class="author-avatar w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center font-bold font-heading text-xl shrink-0">
+                                        {entry.data.name.charAt(0)}
+                                    </div>
+                                    <div>
+                                        <div class="author-name font-bold text-dark font-heading">
+                                            {entry.data.name}
+                                        </div>
+                                        <div class="author-role text-xs text-gray-400">
+                                            {entry.data.role}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                }
+            </div>
+
+            <div
+                class="testimoni-controls flex items-center justify-center gap-6 mt-12"
+            >
+                <button
+                    class="testimoni-btn w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-primary hover:text-white hover:border-primary transition-colors focus:outline-none"
+                    id="prevTestimoni"
+                    aria-label="Previous">←</button
+                >
+                <div class="testimoni-dots flex gap-2" id="testimoniDots"></div>
+                <button
+                    class="testimoni-btn w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-primary hover:text-white hover:border-primary transition-colors focus:outline-none"
+                    id="nextTestimoni"
+                    aria-label="Next">→</button
+                >
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener("astro:page-load", () => setupSlider());
+    setupSlider();
+
+    function setupSlider() {
+        const track = document.getElementById("testimoniTrack");
+        const dotsContainer = document.getElementById("testimoniDots");
+        const prevBtn = document.getElementById("prevTestimoni");
+        const nextBtn = document.getElementById("nextTestimoni");
+
+        if (!track || !dotsContainer || !prevBtn || !nextBtn) return;
+
+        let currentSlide = 0;
+        const cards = track.querySelectorAll(".testimoni-card");
+        const totalCards = cards.length;
+
+        if (totalCards === 0) return;
+
+        const getSlidesPerView = () => {
+            if (window.innerWidth >= 1024) return 3;
+            if (window.innerWidth >= 768) return 2;
+            return 1;
+        };
+
+        let slidesPerView = getSlidesPerView();
+        let maxSlide = Math.max(0, totalCards - slidesPerView);
+
+        // Initial setup
+        createDots();
+        updateSlider();
+
+        function createDots() {
+            dotsContainer.innerHTML = "";
+            const dotCount = totalCards - slidesPerView + 1;
+            for (let i = 0; i < (dotCount > 0 ? dotCount : 1); i++) {
+                const dot = document.createElement("button");
+                dot.className = `w-2.5 h-2.5 rounded-full transition-all ${i === currentSlide ? "bg-primary w-6" : "bg-gray-300"}`;
+                dot.setAttribute("aria-label", `Go to slide ${i + 1}`);
+                dot.addEventListener("click", () => goToSlide(i));
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        function updateSlider() {
+            const cardWidth = parseInt(window.getComputedStyle(cards[0]).width);
+            const gap = parseInt(window.getComputedStyle(track).gap) || 0;
+            const offset = currentSlide * (cardWidth + gap);
+
+            track.style.transform = `translateX(-${offset}px)`;
+
+            // Update dots
+            Array.from(dotsContainer.children).forEach((dot, index) => {
+                dot.className = `w-2.5 h-2.5 rounded-full transition-all ${index === currentSlide ? "bg-primary w-6" : "bg-gray-300"}`;
+            });
+
+            // Update buttons
+            prevBtn.style.opacity = currentSlide === 0 ? "0.5" : "1";
+            prevBtn.style.cursor =
+                currentSlide === 0 ? "not-allowed" : "pointer";
+
+            nextBtn.style.opacity = currentSlide >= maxSlide ? "0.5" : "1";
+            nextBtn.style.cursor =
+                currentSlide >= maxSlide ? "not-allowed" : "pointer";
+        }
+
+        function goToSlide(index: number) {
+            if (index < 0 || index > maxSlide) return;
+            currentSlide = index;
+            updateSlider();
+        }
+
+        prevBtn.addEventListener("click", () => goToSlide(currentSlide - 1));
+        nextBtn.addEventListener("click", () => goToSlide(currentSlide + 1));
+
+        // Handle resize
+        let resizeTimer: any;
+        window.addEventListener("resize", () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                const newSlidesPerView = getSlidesPerView();
+                if (newSlidesPerView !== slidesPerView) {
+                    slidesPerView = newSlidesPerView;
+                    maxSlide = Math.max(0, totalCards - slidesPerView);
+                    if (currentSlide > maxSlide) currentSlide = maxSlide;
+                    createDots();
+                }
+                updateSlider(); // Always update on resize to recalculate card width
+            }, 100);
+        });
+
+        // Auto-play
+        let autoplayInterval = setInterval(() => {
+            if (currentSlide >= maxSlide) {
+                goToSlide(0);
+            } else {
+                goToSlide(currentSlide + 1);
+            }
+        }, 5000);
+
+        track.addEventListener("mouseenter", () =>
+            clearInterval(autoplayInterval),
+        );
+        track.addEventListener("mouseleave", () => {
+            clearInterval(autoplayInterval);
+            autoplayInterval = setInterval(() => {
+                if (currentSlide >= maxSlide) goToSlide(0);
+                else goToSlide(currentSlide + 1);
+            }, 5000);
+        });
+    }
+</script>

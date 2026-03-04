@@ -1,0 +1,176 @@
+@import "tailwindcss";
+
+@theme {
+    --color-primary: #0D7C3D;
+    --color-primary-dark: #0A5F2F;
+    --color-primary-light: #12A050;
+    --color-accent: #D4A843;
+    --color-accent-dark: #B8912E;
+    --color-accent-light: #E8C96A;
+    --color-dark: #1A1A2E;
+    --color-dark-secondary: #2D2D44;
+
+    --font-heading: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+}
+
+/* Custom Utilities that Tailwind doesn't generate by default */
+@layer utilities {
+    .btn-pulse {
+        animation: pulse-glow 2s infinite;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.revealed {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .reveal-left {
+        opacity: 0;
+        transform: translateX(-40px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal-left.revealed {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .reveal-right {
+        opacity: 0;
+        transform: translateX(40px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal-right.revealed {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse-glow {
+
+    0%,
+    100% {
+        box-shadow: 0 4px 14px rgba(13, 124, 61, 0.35);
+    }
+
+    50% {
+        box-shadow: 0 4px 30px rgba(13, 124, 61, 0.55), 0 0 40px rgba(13, 124, 61, 0.2);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+/* Header transition */
+.header {
+    transition: all 0.3s ease;
+}
+
+.header.scrolled {
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    padding: 0.6rem 0;
+}
+
+.header.scrolled .header-logo span {
+    color: var(--color-primary);
+}
+
+.header.scrolled .header-nav a {
+    color: theme('colors.gray.800');
+}
+
+.header.scrolled .header-nav a:hover {
+    color: var(--color-primary);
+    background: rgba(13, 124, 61, 0.05);
+    /* primary-50 */
+}
+
+/* Mobile Nav Drawer */
+.mobile-nav-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.mobile-nav.active {
+    right: 0;
+}
+
+/* Hamburger active state */
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* Progress bar shimmer */
+.progress-bar-inner::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+/* FAQ accordion */
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 500px;
+}
+
+.faq-item.active .faq-toggle {
+    transform: rotate(45deg);
+}
+
+/* Base styles that Tailwind reset might strip but we want */
+blockquote {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 600;
+    font-style: italic;
+    line-height: 1.6;
+}
