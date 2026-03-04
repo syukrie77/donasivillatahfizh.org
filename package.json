@@ -3,10 +3,10 @@
     "type": "module",
     "version": "1.0.0",
     "scripts": {
-        "dev": "astro dev",
-        "build": "astro build",
-        "preview": "astro preview",
-        "astro": "astro"
+        "dev": "npm exec astro dev",
+        "build": "npm exec astro build",
+        "preview": "npm exec astro preview",
+        "astro": "npm exec astro"
     },
     "dependencies": {
         "astro": "^5.18.0",
