@@ -3,17 +3,17 @@
     "type": "module",
     "version": "1.0.0",
     "scripts": {
-        "dev": "npm exec astro dev",
-        "build": "npm exec astro build",
-        "preview": "npm exec astro preview",
-        "astro": "npm exec astro"
+        "dev": "astro dev",
+        "build": "astro build",
+        "preview": "astro preview",
+        "astro": "astro"
     },
     "dependencies": {
-        "astro": "^5.18.0",
         "decap-cms-app": "^3.10.1",
         "tailwindcss": "^4.2.1"
     },
     "devDependencies": {
-        "@tailwindcss/vite": "^4.2.1"
+        "@tailwindcss/vite": "^4.2.1",
+        "astro": "^5.18.0"
     }
 }
