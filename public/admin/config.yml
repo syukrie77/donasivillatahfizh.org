@@ -1,7 +1,7 @@
 backend:
-  name: test-repo # For local development
-  # name: git-gateway
-  # branch: main
+  # name: test-repo # For local development
+  name: git-gateway
+  branch: main
   
 media_folder: "public/assets/uploads"
 public_folder: "/assets/uploads"
